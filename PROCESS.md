@@ -91,6 +91,10 @@ The resulting test suite passed all 28 tests.
 
 After seeing that the first version was technically functional but visually close to a basic CRUD application, I refined the concept rather than expanding the technical scope.
 
-The next feature was a simple distinction between **Core** and **Elective** courses. This adds useful planning information while keeping the same database/API architecture and does not turn the prototype into a full degree-planning system. It carries the same commitment to verification as the two committed passes above: the schema change defaults existing rows to `"core"` so it doesn't break old data, the load-summary logic lives in its own unit-tested module, and the existing end-to-end test was extended to check the new numbers move correctly rather than just trusting the UI. This work is not yet committed at the time of writing; it will be cited here with its own commit hash once it is.
+The next feature was a simple distinction between **Core** and **Elective** courses. This adds useful planning information while keeping the same database/API architecture and does not turn the prototype into a full degree-planning system. It carries the same commitment to verification as the two committed passes above: the schema change defaults existing rows to `"core"` so it doesn't break old data, the load-summary logic lives in its own unit-tested module, and the existing end-to-end test was extended to check the new numbers move correctly rather than just trusting the UI.
+
+This phase was committed as:
+
+* [`f1f6aa9`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit7-jojo111111111025/commit/f1f6aa9395a5c00261bdbaaf88bff7151ff1e14e) — Core/Elective classification and study-load summary
 
 The main breakthrough was therefore not adding more ANU functionality, but making the existing small slice communicate a clearer student need.
