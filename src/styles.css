@@ -35,6 +35,20 @@ button {
   font: inherit;
 }
 
-#messages {
-  padding-inline-start: 1.2rem;
+#courses {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+#courses li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 0.5rem;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+#courses form {
+  margin: 0;
 }
