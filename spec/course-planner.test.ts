@@ -46,7 +46,7 @@ describe("course planner", () => {
     // Find the <li> that mentions the probe code, then read its own delete
     // form's id — not just the nearest one in the document — so this stays
     // correct however many other courses are already in the plan.
-    const items = html.match(/<li>[^]*?<\/li>/g) ?? [];
+    const items = html.match(/<li[^>]*>[^]*?<\/li>/g) ?? [];
     const item = items.find((li) => li.includes(code));
     expect(item, "couldn't find the probe course's <li> on the page").toBeTruthy();
     const idMatch = item!.match(/\/api\/courses\/(\d+)\/delete"/);

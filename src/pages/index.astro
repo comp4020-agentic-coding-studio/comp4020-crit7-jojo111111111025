@@ -3,6 +3,7 @@ import { listCourses } from "../lib/db";
 import "../styles.css";
 
 const courses = listCourses();
+const totalUnits = courses.reduce((sum, course) => sum + course.units, 0);
 ---
 
 <!doctype html>
@@ -19,35 +20,76 @@ const courses = listCourses();
     </nav>
     <main>
       <h1>Semester course plan</h1>
-      <p>
+      <p class="lede">
         A lightweight place to plan a semester before enrolling: add the
         courses you're considering, see them listed with their unit value,
         and drop any you change your mind about. The plan lives in SQLite, so
         it's still here after a reload.
       </p>
-      <form method="post" action="/api/courses">
-        <label for="code">Course code</label>
-        <input id="code" name="code" required maxlength="20" placeholder="COMP4020" />
-        <label for="title">Title</label>
-        <input id="title" name="title" required maxlength="200" placeholder="Agentic Coding Studio" />
-        <label for="units">Units</label>
-        <input id="units" name="units" type="number" min="1" value="6" />
-        <button>Add course</button>
-      </form>
-      <ul id="courses">
+
+      <section aria-labelledby="plan-heading">
+        <div class="plan-summary">
+          <h2 id="plan-heading">Planned courses</h2>
+          <p class="unit-total">
+            {`${courses.length} ${courses.length === 1 ? "course" : "courses"} · ${totalUnits} ${totalUnits === 1 ? "unit" : "units"} total`}
+          </p>
+        </div>
+
         {
-          courses.map((course) => (
-            <li>
-              <span>
-                <strong>{course.code}</strong> — {course.title} ({course.units} units)
-              </span>
-              <form method="post" action={`/api/courses/${course.id}/delete`}>
-                <button aria-label={`Remove ${course.code}`}>Remove</button>
-              </form>
-            </li>
-          ))
+          courses.length === 0 ? (
+            <p class="empty-state">
+              No courses planned yet — add one below to get started.
+            </p>
+          ) : (
+            <ul id="courses">
+              {courses.map((course) => (
+                <li class="course-card">
+                  <div class="course-info">
+                    <span class="course-code">{course.code}</span>
+                    <span class="course-title">{course.title}</span>
+                    <span class="course-units">{course.units} units</span>
+                  </div>
+                  <form method="post" action={`/api/courses/${course.id}/delete`}>
+                    <button class="remove-button" aria-label={`Remove ${course.code} from your plan`}>
+                      Remove
+                    </button>
+                  </form>
+                </li>
+              ))}
+            </ul>
+          )
         }
-      </ul>
+      </section>
+
+      <section aria-labelledby="add-heading">
+        <h2 id="add-heading">Add a course</h2>
+        <form method="post" action="/api/courses" class="add-course-form">
+          <div class="field">
+            <label for="code">Course code</label>
+            <input
+              id="code"
+              name="code"
+              required
+              maxlength="20"
+              placeholder="e.g. COMP4020"
+              aria-describedby="code-hint"
+            />
+            <small id="code-hint">The code as it appears in the ANU handbook</small>
+          </div>
+          <div class="field">
+            <label for="title">Title</label>
+            <input id="title" name="title" required maxlength="200" placeholder="e.g. Agentic Coding Studio" />
+          </div>
+          <div class="field">
+            <label for="units">Units</label>
+            <input id="units" name="units" type="number" min="1" value="6" aria-describedby="units-hint" />
+            <small id="units-hint">Most ANU courses are 6 units</small>
+          </div>
+          <div class="field submit-field">
+            <button class="primary-button">Add course</button>
+          </div>
+        </form>
+      </section>
     </main>
   </body>
 </html>
