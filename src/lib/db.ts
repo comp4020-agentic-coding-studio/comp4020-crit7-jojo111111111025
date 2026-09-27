@@ -30,8 +30,13 @@ export function listCourses(): PlannedCourse[] {
   return db.select().from(plannedCourses).orderBy(plannedCourses.code).all();
 }
 
-export function addCourse(code: string, title: string, units: number): PlannedCourse {
-  return db.insert(plannedCourses).values({ code, title, units }).returning().get();
+export function addCourse(
+  code: string,
+  title: string,
+  units: number,
+  type: "core" | "elective",
+): PlannedCourse {
+  return db.insert(plannedCourses).values({ code, title, units, type }).returning().get();
 }
 
 export function removeCourse(id: number): void {

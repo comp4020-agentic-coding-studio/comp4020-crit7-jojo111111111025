@@ -61,10 +61,35 @@ h2 {
   margin-block-end: 0.25rem;
 }
 
+.planner-header {
+  margin-block-end: 2rem;
+}
+
+.semester-badge {
+  display: inline-block;
+  margin: 0 0 0.6rem;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--anu-blue);
+  background: #f2ede1;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+}
+
+.tagline {
+  margin: 0.1rem 0 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--anu-blue);
+}
+
 .lede {
   color: var(--muted);
   max-width: 38rem;
-  margin-block-end: 2.25rem;
+  margin: 0;
 }
 
 section + section {
@@ -72,19 +97,82 @@ section + section {
 }
 
 .plan-summary {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.5rem 1rem;
-  margin-block-end: 1rem;
+  padding: 1.25rem 1.4rem;
+  margin-block-end: 1.25rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
 }
 
-.unit-total {
-  margin: 0;
-  font-size: 0.95rem;
+.plan-counts {
+  margin: 0 0 0.35rem;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.plan-breakdown {
+  margin: 0 0 0.6rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.plan-load {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.6rem;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
+}
+
+.load-badge {
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.load-badge--light {
+  background: #eaf3ee;
+  color: #2f6b4f;
+}
+
+.load-badge--standard {
+  background: #eaf1f7;
+  color: var(--anu-blue);
+}
+
+.load-badge--full {
+  background: #f8f1e3;
+  color: var(--gold);
+}
+
+.load-badge--over {
+  background: #f8ecec;
+  color: var(--danger-muted);
+}
+
+.load-bar {
+  height: 0.5rem;
+  margin-block-end: 0.5rem;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.load-bar-fill {
+  height: 100%;
+  background: var(--anu-blue);
+  border-radius: inherit;
+}
+
+.load-disclaimer {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--muted);
 }
 
 .empty-state {
@@ -95,6 +183,14 @@ section + section {
   color: var(--muted);
   text-align: center;
   background: var(--card);
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+.empty-state p + p {
+  margin-block-start: 0.4rem;
 }
 
 #courses {
@@ -122,10 +218,16 @@ section + section {
 
 .course-info {
   display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.course-heading {
+  display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.15rem 0.6rem;
-  min-width: 0;
 }
 
 .course-code {
@@ -138,10 +240,38 @@ section + section {
   color: var(--ink);
 }
 
+.course-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .course-units {
   color: var(--muted);
   font-size: 0.9rem;
   white-space: nowrap;
+}
+
+.type-badge {
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.type-badge--core {
+  background: #e7edf0;
+  color: var(--anu-blue);
+  border: 1px solid var(--anu-blue);
+}
+
+.type-badge--elective {
+  background: #f5ede0;
+  color: var(--gold);
+  border: 1px solid var(--gold);
 }
 
 .remove-button {
@@ -197,15 +327,19 @@ form {
   justify-content: flex-end;
 }
 
-input {
+input,
+select {
   width: 100%;
   padding: 0.5rem 0.6rem;
   font: inherit;
   border: 1px solid var(--border);
   border-radius: 0.35rem;
+  background: var(--card);
+  color: inherit;
 }
 
-input:focus-visible {
+input:focus-visible,
+select:focus-visible {
   outline: 2px solid var(--anu-blue);
   outline-offset: 1px;
 }

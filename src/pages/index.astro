@@ -1,9 +1,17 @@
 ---
 import { listCourses } from "../lib/db";
+import { PLANNING_LOAD_REFERENCE_UNITS, summarizePlan } from "../lib/plan-summary";
 import "../styles.css";
 
 const courses = listCourses();
-const totalUnits = courses.reduce((sum, course) => sum + course.units, 0);
+const plan = summarizePlan(courses);
+const loadPercent = Math.min(100, Math.round((plan.totalUnits / PLANNING_LOAD_REFERENCE_UNITS) * 100));
+const loadBadgeClass = {
+  "Light load": "light",
+  "Standard load": "standard",
+  "Full load": "full",
+  "Above 24 units": "over",
+}[plan.loadLabel];
 ---
 
 <!doctype html>
@@ -11,7 +19,7 @@ const totalUnits = courses.reduce((sum, course) => sum + course.units, 0);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ANU course planner</title>
+    <title>ANU Semester Planner</title>
   </head>
   <body>
     <nav aria-label="site">
@@ -19,35 +27,71 @@ const totalUnits = courses.reduce((sum, course) => sum + course.units, 0);
       <a href="/readme/">About</a>
     </nav>
     <main>
-      <h1>Semester course plan</h1>
-      <p class="lede">
-        A lightweight place to plan a semester before enrolling: add the
-        courses you're considering, see them listed with their unit value,
-        and drop any you change your mind about. The plan lives in SQLite, so
-        it's still here after a reload.
-      </p>
+      <div class="planner-header">
+        <p class="semester-badge">Semester 2, 2026</p>
+        <h1>ANU Semester Planner</h1>
+        <p class="tagline">Plan your semester before you enrol.</p>
+        <p class="lede">
+          Keep track of the courses you're considering for this semester and
+          see your study load at a glance. The plan lives in SQLite, so it's
+          still here after a reload — this is a planning tool, not ANU's real
+          enrolment system.
+        </p>
+      </div>
 
       <section aria-labelledby="plan-heading">
-        <div class="plan-summary">
-          <h2 id="plan-heading">Planned courses</h2>
-          <p class="unit-total">
-            {`${courses.length} ${courses.length === 1 ? "course" : "courses"} · ${totalUnits} ${totalUnits === 1 ? "unit" : "units"} total`}
+        <div
+          class="plan-summary"
+          data-course-count={plan.count}
+          data-total-units={plan.totalUnits}
+          data-load-label={plan.loadLabel}
+          data-core-count={plan.coreCount}
+          data-elective-count={plan.electiveCount}
+        >
+          <h2 id="plan-heading">Your plan</h2>
+          <p class="plan-counts">
+            {`${plan.count} ${plan.count === 1 ? "course" : "courses"} · ${plan.totalUnits} ${plan.totalUnits === 1 ? "unit" : "units"}`}
+          </p>
+          {
+            plan.count > 0 && (
+              <p class="plan-breakdown">
+                {`${plan.coreCount} Core · ${plan.electiveCount} Elective`}
+              </p>
+            )
+          }
+          <p class="plan-load">
+            {`Study load: ${plan.totalUnits} / ${PLANNING_LOAD_REFERENCE_UNITS} units`}
+            <span class={`load-badge load-badge--${loadBadgeClass}`}>{plan.loadLabel}</span>
+          </p>
+          <div class="load-bar" aria-hidden="true">
+            <div class="load-bar-fill" style={`width: ${loadPercent}%`} />
+          </div>
+          <p class="load-disclaimer">
+            A planning reference, not an official ANU enrolment assessment.
           </p>
         </div>
 
         {
           courses.length === 0 ? (
-            <p class="empty-state">
-              No courses planned yet — add one below to get started.
-            </p>
+            <div class="empty-state">
+              <p>No courses planned yet.</p>
+              <p>Add the courses you're considering for this semester to build your plan.</p>
+            </div>
           ) : (
             <ul id="courses">
               {courses.map((course) => (
                 <li class="course-card">
                   <div class="course-info">
-                    <span class="course-code">{course.code}</span>
-                    <span class="course-title">{course.title}</span>
-                    <span class="course-units">{course.units} units</span>
+                    <div class="course-heading">
+                      <span class="course-code">{course.code}</span>
+                      <span class="course-title">{course.title}</span>
+                    </div>
+                    <div class="course-meta">
+                      <span class={`type-badge type-badge--${course.type}`}>
+                        {course.type === "elective" ? "Elective" : "Core"}
+                      </span>
+                      <span class="course-units">{`${course.units} units`}</span>
+                    </div>
                   </div>
                   <form method="post" action={`/api/courses/${course.id}/delete`}>
                     <button class="remove-button" aria-label={`Remove ${course.code} from your plan`}>
@@ -79,6 +123,13 @@ const totalUnits = courses.reduce((sum, course) => sum + course.units, 0);
           <div class="field">
             <label for="title">Title</label>
             <input id="title" name="title" required maxlength="200" placeholder="e.g. Agentic Coding Studio" />
+          </div>
+          <div class="field">
+            <label for="type">Course type</label>
+            <select id="type" name="type" required>
+              <option value="core">Core</option>
+              <option value="elective">Elective</option>
+            </select>
           </div>
           <div class="field">
             <label for="units">Units</label>

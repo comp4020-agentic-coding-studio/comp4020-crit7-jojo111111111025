@@ -12,6 +12,10 @@ export const plannedCourses = sqliteTable("planned_courses", {
   code: text().notNull(),
   title: text().notNull(),
   units: int().notNull().default(6),
+  // "core" default keeps rows from before this column existed valid.
+  type: text({ enum: ["core", "elective"] })
+    .notNull()
+    .default("core"),
   createdAt: text("created_at")
     .notNull()
     .default(sql`(datetime('now'))`),

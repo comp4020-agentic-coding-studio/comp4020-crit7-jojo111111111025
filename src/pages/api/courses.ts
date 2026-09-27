@@ -10,9 +10,11 @@ export const POST: APIRoute = async ({ request, redirect }) => {
   const title = String(form.get("title") ?? "").trim();
   const rawUnits = Number(form.get("units"));
   const units = Number.isInteger(rawUnits) && rawUnits > 0 ? rawUnits : 6;
+  const rawType = form.get("type");
+  const type = rawType === "elective" ? "elective" : "core";
 
   if (code && title) {
-    addCourse(code.slice(0, 20).toUpperCase(), title.slice(0, 200), units);
+    addCourse(code.slice(0, 20).toUpperCase(), title.slice(0, 200), units, type);
   }
 
   return redirect("/", 303);

@@ -15,6 +15,13 @@
       "when": 1790512348180,
       "tag": "0001_motionless_maggott",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790517376087,
+      "tag": "0002_melodic_pyro",
+      "breakpoints": true
     }
   ]
 }

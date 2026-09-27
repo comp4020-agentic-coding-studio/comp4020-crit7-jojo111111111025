@@ -1,0 +1,1 @@
+ALTER TABLE `planned_courses` ADD `type` text DEFAULT 'core' NOT NULL;
